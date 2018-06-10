@@ -1,10 +1,9 @@
 const chai = require('chai');
 const should = chai.should(); // eslint-disable-line
-const {
-  app,
-  database
-} = require('../server.js');
 const chaiHttp = require('chai-http');
+const server = require('../server');
+const configuration = require('../knexfile')['test'];
+const database = require('knex')(configuration);
 
 chai.use(chaiHttp);
 
@@ -25,19 +24,7 @@ describe('Endpoint tests', () => {
   });
 
   it('should GET all the projects', (done) => {
-    chai.request(app)
-      .get('/api/v1/projects')
-      .end((error, response) => {
-        response.should.have.status(200);
-        response.should.be.json;
-        response.body.should.be.an('array');
-        response.body[0].should.have.property('name');
-        done();
-      });
-  });
-
-  it('should GET all the projects', (done) => {
-    chai.request(app)
+    chai.request(server)
       .get('/api/v1/projects')
       .end((error, response) => {
         response.should.have.status(200);
@@ -49,7 +36,7 @@ describe('Endpoint tests', () => {
   });
 
   it('should GET all the pallets', (done) => {
-    chai.request(app)
+    chai.request(server)
       .get('/api/v1/pallets')
       .end((error, response) => {
         response.should.have.status(200);
@@ -65,4 +52,72 @@ describe('Endpoint tests', () => {
         done();
       });
   });
+
+  it('should POST a project to the db', (done) => {
+    chai.request(server)
+      .post('/api/v1/projects')
+      .send({ name: 'Bar' })
+      .end((error, response) => {
+        response.should.be.json;
+        response.should.have.status(201);
+        response.should.be.an('object');
+        response.body.should.have.property('success');
+        done();
+      });
+  });
+
+  it('should not POST a project to the db if missing param', (done) => {
+    chai.request(server)
+      .post('/api/v1/projects')
+      .send({ })
+      .end((error, response) => {
+        response.should.be.json;
+        response.should.have.status(422);
+        response.should.be.an('object');
+        response.body.should.have.property('error');
+        done();
+      });
+  });
+
+  it('should POST a pallet to the db', (done) => {
+    chai.request(server)
+      .post('/api/v1/pallets')
+      .send({ 
+        name: 'Third Pallet',
+        color1: 'red',
+        color2: 'white',
+        color3: 'blue',
+        color4: 'green',
+        color5: 'purple',
+        pallet_id: '1'
+      })
+      .end((error, response) => {
+        response.should.be.json;
+        response.should.have.status(201);
+        response.should.be.an('object');
+        response.body.should.have.property('success');
+        done();
+      });
+  });
+
+  it('should not POST a pallet to the db if missing param', (done) => {
+    chai.request(server)
+      .post('/api/v1/pallets')
+      .send({ 
+        name: 'Third Pallet',
+        color1: 'red',
+        color2: 'white',
+        color3: 'blue',
+        color4: 'green',
+        pallet_id: '1'
+      })
+      .end((error, response) => {
+        response.should.be.json;
+        response.should.have.status(422);
+        response.should.be.an('object');
+        response.body.should.have.property('error');
+        done();
+      });
+  });
+
 });

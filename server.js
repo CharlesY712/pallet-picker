@@ -88,4 +88,4 @@ app.delete('/api/v1/pallet/:id', (request, response) => {
     });
 });
 
-module.exports = { app, database };
+module.exports = app;
