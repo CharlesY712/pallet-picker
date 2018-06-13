@@ -28,7 +28,15 @@ function generateColors() {
 
 function lockColor() {
   $(this).toggleClass('locked')
+
+  if ($(this).text() == $(this).data("text-swap")) {
+    $(this).text($(this).data("text-original"));
+  } else {
+    $(this).data("text-original", $(this).text());
+    $(this).text($(this).data("text-swap"));
+  }
 }
+
 
 $(document).ready(function() {
   generateColors();
