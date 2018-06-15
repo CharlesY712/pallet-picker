@@ -1,4 +1,4 @@
-$('#generate-palette').click(generateColors)
+$('#generate-Pallet').click(generateColors)
 $('.color-window').click(lockColor)
 
 var safeColors = ['00', '33', '66', '99', 'cc', 'ff'];
@@ -37,8 +37,66 @@ function lockColor() {
   }
 }
 
-
 $(document).ready(function() {
   generateColors();
+  getExistingProjects();
 });
 
+async function getExistingProjects() {
+  $('.existing-projects').empty();
+  const projects = await fetchProjects();
+  renderProjects(projects);
+  const pallets = await fetchPallets();
+  renderPallets(pallets);
+}
+
+async function fetchProjects () {
+  url = '/api/v1/projects'
+  try {
+    const response = await fetch(url);
+    const projects = await response.json();
+    return projects;
+  } catch (error) {
+    alert('This happened: ' + error.message);
+  }
+};
+
+function renderProjects(projects) {
+  projects.forEach(project => {
+    const singleProject = $(`
+    <article class="project-wrapper" id="project-${project.id}">
+      <h2 class="project-name">${project.name}</h2>
+    </article>
+  `);
+  $('.existing-projects').append(singleProject);
+  });
+}
+
+async function fetchPallets () {
+  url = '/api/v1/pallets'
+  try {
+    const response = await fetch(url);
+    const pallets = await response.json();
+    return pallets;
+  } catch (error) {
+    alert('This happened: ' + error.message);
+  }
+};
+
+function renderPallets(pallets) {
+  console.log(pallets)
+  pallets.forEach(pallet => {
+    const singlePallet = $(`
+      <div id="pallet-${pallet.id}" class="pallet-wrapper">
+        <h3 class="pallet-name">${pallet.name}: </h3>
+        <div class="pallet-color" style="background-color:${pallet.color1}"></div>
+        <div class="pallet-color" style="background-color:${pallet.color2}"></div>
+        <div class="pallet-color" style="background-color:${pallet.color3}"></div>
+        <div class="pallet-color" style="background-color:${pallet.color4}"></div>
+        <div class="pallet-color" style="background-color:${pallet.color5}"></div>
+        <img src="/images/trashcan.png" alt="delete icon" id="${pallet.id}" class="delete-pallet-icon" />
+      </div>
+    `)
+    $("#project-" + pallet.pallet_id).append(singlePallet);
+  })
+}
