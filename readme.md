@@ -24,4 +24,4 @@ You can run the testing suite with `npm test`.
 
 ## Screenshot
 
-![screenshot](https://cl.ly/3u0y2g3W1I40)
+![screenshot](./images/Pallet-Picker-Screen-Shot.png)
