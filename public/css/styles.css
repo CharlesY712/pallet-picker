@@ -37,3 +37,7 @@ body {
   width: 50px;
   cursor: pointer;
 }
+
+#generate-pallet {
+  margin: 2%;
+}

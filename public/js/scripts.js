@@ -1,5 +1,8 @@
-$('#generate-Pallet').click(generateColors)
+$('#generate-pallet').click(generateColors)
 $('.color-window').click(lockColor)
+$('.existing-projects').click('.delete-pallet-icon', (event) => {
+  deletePallet(event.target.id);
+});
 
 var safeColors = ['00', '33', '66', '99', 'cc', 'ff'];
 var rand = function() {
@@ -51,7 +54,7 @@ async function getExistingProjects() {
 }
 
 async function fetchProjects () {
-  url = '/api/v1/projects'
+  const url = '/api/v1/projects'
   try {
     const response = await fetch(url);
     const projects = await response.json();
@@ -73,7 +76,7 @@ function renderProjects(projects) {
 }
 
 async function fetchPallets () {
-  url = '/api/v1/pallets'
+  const url = '/api/v1/pallets'
   try {
     const response = await fetch(url);
     const pallets = await response.json();
@@ -84,7 +87,6 @@ async function fetchPallets () {
 };
 
 function renderPallets(pallets) {
-  console.log(pallets)
   pallets.forEach(pallet => {
     const singlePallet = $(`
       <div id="pallet-${pallet.id}" class="pallet-wrapper">
@@ -99,4 +101,15 @@ function renderPallets(pallets) {
     `)
     $("#project-" + pallet.pallet_id).append(singlePallet);
   })
+}
+
+async function deletePallet(id) {
+  console.log('hello');
+  
+
+  const url = `/api/v1/pallets/${id}`
+  await fetch(url, {
+    method: 'DELETE'
+  })
+  $(`#pallet-${id}`).remove();
 }

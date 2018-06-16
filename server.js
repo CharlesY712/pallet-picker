@@ -74,7 +74,7 @@ app.post('/api/v1/pallets', (request, response) => {
     });
 });
 
-app.delete('/api/v1/pallet/:id', (request, response) => {
+app.delete('/api/v1/pallets/:id', (request, response) => {
   database('pallets').where('id', request.params.id).del()
     .then(deleteCount => {
       if (deleteCount === 1) {
