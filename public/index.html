@@ -22,16 +22,24 @@
       <button id="generate-pallet">Generate New Palette</button>
       <form>
           <input 
+            id="pallet-name"
             type="text" 
             placeholder="Palette name">
-          <button>Save Pallet</button>
+            <select id="save-palette-project">
+              <option>Select a Project</option>
+            </select>
+            <button>Save Pallet</button>
         </form>
+        <hr>
       <form>
             <input 
+              id="project-name"
               type="text" 
               placeholder="New project name">
-          <button>Save Project</button>
+          <button id="create-new-project">Create New Project</button>
         </form>
+
+
     </section>
     <section>
       <h1>Existing Projects</h1>

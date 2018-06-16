@@ -1,8 +1,8 @@
 $('#generate-pallet').click(generateColors)
 $('.color-window').click(lockColor)
-$('.existing-projects').click('.delete-pallet-icon', (event) => {
-  deletePallet(event.target.id);
-});
+$('.existing-projects').click('.delete-pallet-icon', (event) => deletePallet(event.target.id));
+$('#create-new-project').click(postProject)
+
 
 var safeColors = ['00', '33', '66', '99', 'cc', 'ff'];
 var rand = function() {
@@ -112,4 +112,23 @@ async function deletePallet(id) {
     method: 'DELETE'
   })
   $(`#pallet-${id}`).remove();
+}
+
+async function postProject() {
+  event.preventDefault();
+  const name = $('#project-name').val();
+  
+  try {
+    url = '/api/v1/projects/';
+    await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({name})
+    })
+  } catch (error) {
+    alert('This happened: ' + error.message);
+  }
+  await getExistingProjects();
 }
