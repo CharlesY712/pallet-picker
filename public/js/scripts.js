@@ -1,7 +1,8 @@
-$('#generate-pallet').click(generateColors)
-$('.color-window').click(lockColor)
+$('#generate-pallet').click(generateColors);
+$('.color-window').click(lockColor);
 $('.existing-projects').click('.delete-pallet-icon', (event) => deletePallet(event.target.id));
-$('#create-new-project').click(postProject)
+$('#create-new-project').click(postProject);
+$('#save-pallet').click(postPallet);
 
 
 var safeColors = ['00', '33', '66', '99', 'cc', 'ff'];
@@ -79,7 +80,7 @@ function renderProjects(projects) {
 function updateProjectSelect(projects) {
   $('#select-project').empty().append('<option>Select a Project</option>');
   projects.forEach(project => {
-    $('#select-project').append(`<option>${project.name}</option>`)
+    $('#select-project').append(`<option id="${project.id}">${project.name}</option>`)
   });
 };
 
@@ -112,16 +113,6 @@ function renderPallets(pallets) {
   })
 }
 
-async function deletePallet(id) {
-  console.log('hello');
-  
-
-  const url = `/api/v1/pallets/${id}`
-  await fetch(url, {
-    method: 'DELETE'
-  })
-  $(`#pallet-${id}`).remove();
-}
 
 async function postProject() {
   event.preventDefault();
@@ -141,3 +132,38 @@ async function postProject() {
   }
   await getExistingProjects();
 }
+
+async function postPallet() {
+    const name = $('#pallet-name').val();
+    const color1 = $('#window-one').css('background-color');
+    const color2 = $('#window-two').css('background-color');
+    const color3 = $('#window-three').css('background-color');
+    const color4 = $('#window-four').css('background-color');
+    const color5 = $('#window-five').css('background-color');
+    const pallet_id = $('#select-project').children(":selected").attr("id");
+    
+    const pallet = { name, color1, color2, color3, color4, color5, pallet_id}
+    
+    try {
+      url = '/api/v1/pallets/';
+      await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(pallet)
+      })
+    } catch (error) {
+      console.log(error)
+      alert('This happened while posting to /pallets: ' + error);
+    }
+};
+
+
+async function deletePallet(id) {
+  const url = `/api/v1/pallets/${id}`
+  await fetch(url, {
+    method: 'DELETE'
+  })
+  $(`#pallet-${id}`).remove();
+};
