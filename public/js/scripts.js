@@ -49,6 +49,7 @@ async function getExistingProjects() {
   $('.existing-projects').empty();
   const projects = await fetchProjects();
   renderProjects(projects);
+  updateProjectSelect(projects);
   const pallets = await fetchPallets();
   renderPallets(pallets);
 }
@@ -73,7 +74,15 @@ function renderProjects(projects) {
   `);
   $('.existing-projects').append(singleProject);
   });
-}
+};
+
+function updateProjectSelect(projects) {
+  $('#select-project').empty().append('<option>Select a Project</option>');
+  projects.forEach(project => {
+    $('#select-project').append(`<option>${project.name}</option>`)
+  });
+};
+
 
 async function fetchPallets () {
   const url = '/api/v1/pallets'
